@@ -1,0 +1,81 @@
+services:
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.3.0
+    ports:
+      - ${ZOOKEEPER_PORT_CONFIG}
+    environment:
+      ZOOKEEPER_CLIENT_PORT: ${ZOOKEEPER_INTERNAL_PORT}
+      ZOOKEEPER_TICK_TIME: 2000
+
+  kafka:
+    image: confluentinc/cp-kafka:7.3.0
+    depends_on:
+      - zookeeper
+    ports:
+      - ${KAFKA_PORT_CONFIG}
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:${ZOOKEEPER_INTERNAL_PORT}
+      KAFKA_ADVERTISED_LISTENERS: ${KAFKA_ADVERTISED_LISTENERS}
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+
+  prometheus:
+    image: prom/prometheus:v2.51.1
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--enable-feature=otlp-write-receiver"
+    ports:
+      - ${PROMETHEUS_PORT_CONFIG}
+
+  loki:
+    image: grafana/loki:2.8.2
+    command: -config.file=/etc/loki/local-config.yaml
+    ports:
+      - ${LOKI_PORT_CONFIG}
+
+  tempo:
+    image: grafana/tempo:2.1.1
+    volumes:
+      - ./tempo-config.yaml:/etc/tempo.yaml
+    command: [ "-config.file=/etc/tempo.yaml" ]
+    ports:
+      - ${TEMPO_PORT_CONFIG}
+
+  grafana:
+    image: grafana/grafana:9.5.2
+    ports:
+      - ${GRAFANA_PORT_CONFIG}
+    volumes:
+      - ./grafana/provisioning:/etc/grafana/provisioning
+    environment:
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
+    depends_on:
+      - loki
+      - tempo
+      - prometheus
+
+  otel-collector:
+    image: otel/opentelemetry-collector-contrib:0.91.0
+    command: [ "--config=/etc/otel-collector-config.yaml" ]
+    volumes:
+      - ./otel-collector-config.yaml:/etc/otel-collector-config.yaml
+    ports:
+      - ${OTEL_COLLECTOR_GRPC_PORT_CONFIG}
+      - ${OTEL_COLLECTOR_HTTP_PORT_CONFIG}
+    depends_on:
+      - prometheus
+      - tempo
+      - loki
+      - jaeger
+
+  jaeger:
+    image: jaegertracing/all-in-one:1.57.0
+    environment:
+      - COLLECTOR_OTLP_ENABLED=true
+    ports:
+      - ${JAEGER_UI_PORT_CONFIG}
+      - ${JAEGER_THRIFT_PORT_CONFIG}

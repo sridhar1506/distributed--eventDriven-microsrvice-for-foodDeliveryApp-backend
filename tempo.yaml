@@ -1,0 +1,17 @@
+server:
+  http_listen_port: ${TEMPO_HTTP_PORT}
+
+distributor:
+  receivers:
+    otlp:
+      protocols:
+        grpc:
+          endpoint: "${OTEL_GRPC_ENDPOINT}"
+
+ingester: {}
+
+storage:
+  trace:
+    backend: local
+    local:
+      path: /tmp/tempo/traces

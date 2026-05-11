@@ -1,0 +1,42 @@
+receivers:
+  otlp:
+    protocols:
+      grpc:
+        endpoint: ${OTEL_GRPC_ENDPOINT}
+      http:
+        endpoint: ${OTEL_HTTP_ENDPOINT}
+
+processors:
+  batch:
+
+exporters:
+  otlphttp/tempo:
+    endpoint: ${TEMPO_ENDPOINT}
+    tls:
+      insecure: true
+  otlphttp/jaeger:
+    endpoint: ${JAEGER_ENDPOINT}
+    tls:
+      insecure: true
+  otlphttp/prometheus:
+    endpoint: ${PROMETHEUS_ENDPOINT}
+    tls:
+      insecure: true
+  loki:
+    endpoint: ${LOKI_ENDPOINT}
+
+service:
+  pipelines:
+    traces:
+      receivers: [ otlp ]
+      processors: [ batch ]
+      exporters: [ otlphttp/tempo, otlphttp/jaeger ]
+    metrics:
+      receivers: [ otlp ]
+      processors: [ batch ]
+      exporters: [ otlphttp/prometheus ]
+    logs:
+      receivers: [ otlp ]
+      processors: [ batch ]
+      exporters: [ loki ]
+

@@ -1,0 +1,11 @@
+global:
+  scrape_interval: 15s
+
+scrape_configs:
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['${PROMETHEUS_TARGET}']
+
+# Enables the OLTP receiver which should match with Java properties
+remote_write:
+  - url: "${PROMETHEUS_REMOTE_WRITE_URL}"

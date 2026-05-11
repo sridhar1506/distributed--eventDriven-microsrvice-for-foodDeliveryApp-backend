@@ -1,0 +1,27 @@
+# 1. Omit the Frontend
+food-delivery-frontend/
+
+# 2. Omit IDE and System files
+.idea/
+.vscode/
+*.iml
+out/
+gen/
+.DS_Store
+Thumbs.db
+
+# 3. Omit Build Folders (Maven/Java)
+target/
+*.class
+*.jar
+*.war
+*.ear
+
+# 4. Omit Local Configuration (Where you will store your secrets)
+.env
+local.properties
+application-local.properties
+
+# 5. Omit Logs
+*.log
+logs/
