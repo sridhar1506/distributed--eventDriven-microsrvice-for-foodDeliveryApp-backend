@@ -1,8 +1,8 @@
-# Distributed Event-Driven Food Delivery Backend
+# Food Booking Application (Backend Focused)
 
 This application is built using **Spring Cloud & Kafka**. Engineered for scalability, it utilizes **Spring Cloud OpenFeign** for robust inter-service synchronous communication and **Apache Kafka** for high-performance asynchronous domain event streaming. 
 
-Optimized with **Java Virtual Threads** for maximum throughput and secured by a sophisticated **JWT + Internal Handshake** mechanism, the platform is fully observable via a modern **PLG + Tempo** stack. It represents a production-grade blueprint for modern, large-scale microservices development.
+Optimized with **Java Virtual Threads** for maximum throughput and secured by a sophisticated **JWT + Internal Handshake** mechanism, the platform is fully observable via a modern **PLG + Tempo** stack. It represents a production-grade blueprint for new age, enterprise microservices development.
 
 ## 🚀 Key Features
 
