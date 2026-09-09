@@ -26,4 +26,4 @@ For a detailed deep dive into the system architecture, mermaid diagrams, and int
 - **Spring Cloud** (Gateway, Eureka, OpenFeign)
 - **Apache Kafka**
 - **MySQL**
-- **Observability**: Prometheus, Grafana Loki, Tempo, OpenTelemetry
+- **Observability**: Prometheus, Grafana, Loki, Tempo, OpenTelemetry
